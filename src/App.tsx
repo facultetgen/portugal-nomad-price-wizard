@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Toast, useToast } from './components/Toast';
 import { FormField, useValidation } from './components/FormValidation';
 import { PaymentIntegration } from './components/PaymentIntegration';
+import { ChevronDown } from 'lucide-react';
 
 interface Service {
   id: string;
@@ -12,7 +13,7 @@ interface Service {
   category: 'essential' | 'additional' | 'premium';
 }
 
-interface FormData {
+interface ContactFormData {
   name: string;
   email: string;
   phone: string;
@@ -23,7 +24,7 @@ interface DiscountRule {
   type: 'bulk' | 'promo' | 'first_time' | 'seasonal';
   value: number;
   description: string;
-  condition?: (services: Service[], formData?: FormData) => boolean;
+  condition?: (services: Service[], formData?: ContactFormData) => boolean;
 }
 
 const App = () => {
@@ -65,7 +66,7 @@ const App = () => {
     }
   ]);
 
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<ContactFormData>({
     name: '',
     email: '',
     phone: '',
@@ -78,7 +79,6 @@ const App = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [currentStep, setCurrentStep] = useState<'selection' | 'contact' | 'payment'>('selection');
 
-  // Discount rules
   const discountRules: DiscountRule[] = [
     {
       type: 'bulk',
@@ -105,7 +105,6 @@ const App = () => {
       service.id === id ? { ...service, selected: !service.selected } : service
     ));
     
-    // Добавляем звуковую обратную связь через вибрацию (если поддерживается)
     if (navigator.vibrate) {
       navigator.vibrate(50);
     }
@@ -118,7 +117,6 @@ const App = () => {
     let totalDiscount = 0;
     const appliedDiscounts: string[] = [];
 
-    // Применяем скидки
     discountRules.forEach(rule => {
       if (rule.condition && rule.condition(services, formData)) {
         totalDiscount = Math.max(totalDiscount, rule.value);
@@ -146,7 +144,7 @@ const App = () => {
       phone: { required: true, phone: true }
     };
 
-    const errors = validateForm(formData, validationRules);
+    const errors = validateForm(formData as Record<string, string>, validationRules);
     const errorMap: Record<string, string> = {};
     
     errors.forEach(error => {
@@ -182,12 +180,10 @@ const App = () => {
     setIsProcessing(true);
     
     try {
-      // Симуляция API запроса
       await new Promise(resolve => setTimeout(resolve, 2000));
       
       addToast(`Оплата успешно проведена через ${method}!`, 'success');
       
-      // Сброс формы
       setServices(prev => prev.map(s => ({ ...s, selected: false })));
       setFormData({ name: '', email: '', phone: '', promoCode: '' });
       setCurrentStep('selection');
@@ -206,7 +202,6 @@ const App = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/30 p-4">
       <div className="max-w-md mx-auto">
-        {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-thin text-gray-800 mb-2">
             Digital Nomad
@@ -216,7 +211,6 @@ const App = () => {
             Программа получения визы цифрового кочевника в Португалии
           </p>
           
-          {/* Progress Indicator */}
           <div className="flex justify-center mt-6 space-x-2">
             {['selection', 'contact', 'payment'].map((step, index) => (
               <div
@@ -233,7 +227,6 @@ const App = () => {
           </div>
         </div>
 
-        {/* Services Selection */}
         {currentStep === 'selection' && (
           <div className="space-y-3 mb-8">
             {services.map((service) => (
@@ -246,7 +239,6 @@ const App = () => {
           </div>
         )}
 
-        {/* Contact Form */}
         {currentStep === 'contact' && (
           <div className="space-y-4 mb-8">
             <h2 className="text-xl font-light text-gray-800 mb-4">Контактная информация</h2>
@@ -289,7 +281,6 @@ const App = () => {
           </div>
         )}
 
-        {/* Payment Step */}
         {currentStep === 'payment' && (
           <div className="mb-8">
             <h2 className="text-xl font-light text-gray-800 mb-4">Способ оплаты</h2>
@@ -302,12 +293,10 @@ const App = () => {
           </div>
         )}
 
-        {/* Price Summary */}
         {calculation.selectedServices.length > 0 && (
           <PriceSummary calculation={calculation} />
         )}
 
-        {/* Action Buttons */}
         <div className="space-y-4">
           {currentStep !== 'payment' && (
             <button
@@ -321,7 +310,6 @@ const App = () => {
             </button>
           )}
 
-          {/* Terms */}
           {currentStep === 'contact' && (
             <label className="flex items-start space-x-3 cursor-pointer">
               <input
@@ -336,7 +324,6 @@ const App = () => {
             </label>
           )}
 
-          {/* Back Button */}
           {currentStep !== 'selection' && (
             <button
               onClick={() => setCurrentStep(prev => 
@@ -356,7 +343,7 @@ const App = () => {
   );
 };
 
-// Service Card Component
+// Улучшенный Service Card Component с лучшим дропдауном
 const ServiceCard: React.FC<{ service: Service; onToggle: (id: string) => void }> = ({ service, onToggle }) => {
   const [isDescriptionOpen, setIsDescriptionOpen] = useState(false);
 
@@ -395,12 +382,15 @@ const ServiceCard: React.FC<{ service: Service; onToggle: (id: string) => void }
           
           <button
             onClick={() => setIsDescriptionOpen(!isDescriptionOpen)}
-            className="text-gray-500 text-sm font-light flex items-center space-x-1 hover:text-gray-700 transition-colors"
+            className="text-blue-600 text-sm font-light bg-blue-50 px-3 py-1.5 rounded-full 
+              hover:bg-blue-100 transition-all duration-200 flex items-center space-x-2"
           >
-            <span>описание услуги</span>
-            <span className={`transform transition-transform duration-300 ${isDescriptionOpen ? 'rotate-180' : ''}`}>
-              ▼
-            </span>
+            <span>Подробнее</span>
+            <ChevronDown 
+              className={`w-4 h-4 transition-transform duration-300 ${
+                isDescriptionOpen ? 'rotate-180' : ''
+              }`} 
+            />
           </button>
         </div>
         
@@ -447,7 +437,6 @@ const PriceSummary: React.FC<{ calculation: any }> = ({ calculation }) => {
     <div className="bg-white/80 backdrop-blur-2xl rounded-3xl p-6 shadow-2xl shadow-blue-500/20 mb-8">
       <h3 className="font-light text-gray-800 mb-4">Сводка заказа</h3>
       
-      {/* Selected Services */}
       <div className="space-y-2 mb-4">
         {calculation.selectedServices.map((service: Service) => (
           <div key={service.id} className="flex justify-between text-sm">
