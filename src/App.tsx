@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Toast, useToast } from './components/Toast';
 import { FormField, useValidation } from './components/FormValidation';
@@ -64,7 +63,7 @@ const App = () => {
       selected: false,
       category: 'premium'
     }
-  ];
+  ]);
 
   const [formData, setFormData] = useState<FormData>({
     name: '',
