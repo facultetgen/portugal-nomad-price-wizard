@@ -257,53 +257,60 @@ const App = () => {
           </div>
         )}
 
-        {/* Contact Form Step - Single Column */}
+        {/* Contact Form Step - Two Column Layout */}
         {currentStep === 'contact' && (
-          <div className="max-w-2xl mx-auto">
-            <div className="space-y-4 mb-8">
-              <h2 className="text-xl font-light text-gray-800 mb-4">Контактная информация</h2>
-              
-              <FormField
-                label="Полное имя"
-                value={formData.name}
-                onChange={(value) => setFormData(prev => ({ ...prev, name: value }))}
-                error={formErrors.name}
-                required
-                placeholder="Введите ваше полное имя"
-              />
-              
-              <FormField
-                label="Email"
-                type="email"
-                value={formData.email}
-                onChange={(value) => setFormData(prev => ({ ...prev, email: value }))}
-                error={formErrors.email}
-                required
-                placeholder="example@email.com"
-              />
-              
-              <FormField
-                label="Телефон"
-                type="tel"
-                value={formData.phone}
-                onChange={(value) => setFormData(prev => ({ ...prev, phone: value }))}
-                error={formErrors.phone}
-                required
-                placeholder="+7 (999) 123-45-67"
-              />
-              
-              <FormField
-                label="Промокод"
-                value={formData.promoCode}
-                onChange={(value) => setFormData(prev => ({ ...prev, promoCode: value }))}
-                placeholder="Введите промокод (необязательно)"
-              />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Left Column - Contact Form */}
+            <div className="lg:col-span-2">
+              <div className="space-y-4">
+                <h2 className="text-xl font-light text-gray-800 mb-4">Контактная информация</h2>
+                
+                <FormField
+                  label="Полное имя"
+                  value={formData.name}
+                  onChange={(value) => setFormData(prev => ({ ...prev, name: value }))}
+                  error={formErrors.name}
+                  required
+                  placeholder="Введите ваше полное имя"
+                />
+                
+                <FormField
+                  label="Email"
+                  type="email"
+                  value={formData.email}
+                  onChange={(value) => setFormData(prev => ({ ...prev, email: value }))}
+                  error={formErrors.email}
+                  required
+                  placeholder="example@email.com"
+                />
+                
+                <FormField
+                  label="Телефон"
+                  type="tel"
+                  value={formData.phone}
+                  onChange={(value) => setFormData(prev => ({ ...prev, phone: value }))}
+                  error={formErrors.phone}
+                  required
+                  placeholder="+7 (999) 123-45-67"
+                />
+                
+                <FormField
+                  label="Промокод"
+                  value={formData.promoCode}
+                  onChange={(value) => setFormData(prev => ({ ...prev, promoCode: value }))}
+                  placeholder="Введите промокод (необязательно)"
+                />
+              </div>
             </div>
 
-            {/* Price Summary for contact step */}
-            {calculation.selectedServices.length > 0 && (
-              <PriceSummary calculation={calculation} />
-            )}
+            {/* Right Column - Order Summary */}
+            <div className="lg:col-span-1">
+              <div className="sticky top-4">
+                {calculation.selectedServices.length > 0 && (
+                  <PriceSummary calculation={calculation} />
+                )}
+              </div>
+            </div>
           </div>
         )}
 
