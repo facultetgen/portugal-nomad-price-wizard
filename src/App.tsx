@@ -230,13 +230,12 @@ const App = () => {
           </div>
         </div>
 
-        {/* Main Content - Two Column Layout for Desktop */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left Column - Main Content */}
-          <div className="lg:col-span-2">
-            {/* Services Selection */}
-            {currentStep === 'selection' && (
-              <div className="space-y-3 mb-8">
+        {/* Services Selection Step - Two Column Layout */}
+        {currentStep === 'selection' && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Left Column - Services List */}
+            <div className="lg:col-span-2">
+              <div className="space-y-3">
                 {services.map((service) => (
                   <ServiceCard 
                     key={service.id}
@@ -245,129 +244,136 @@ const App = () => {
                   />
                 ))}
               </div>
-            )}
+            </div>
 
-            {/* Contact Form */}
-            {currentStep === 'contact' && (
-              <div className="space-y-4 mb-8">
-                <h2 className="text-xl font-light text-gray-800 mb-4">Контактная информация</h2>
-                
-                <FormField
-                  label="Полное имя"
-                  value={formData.name}
-                  onChange={(value) => setFormData(prev => ({ ...prev, name: value }))}
-                  error={formErrors.name}
-                  required
-                  placeholder="Введите ваше полное имя"
-                />
-                
-                <FormField
-                  label="Email"
-                  type="email"
-                  value={formData.email}
-                  onChange={(value) => setFormData(prev => ({ ...prev, email: value }))}
-                  error={formErrors.email}
-                  required
-                  placeholder="example@email.com"
-                />
-                
-                <FormField
-                  label="Телефон"
-                  type="tel"
-                  value={formData.phone}
-                  onChange={(value) => setFormData(prev => ({ ...prev, phone: value }))}
-                  error={formErrors.phone}
-                  required
-                  placeholder="+7 (999) 123-45-67"
-                />
-                
-                <FormField
-                  label="Промокод"
-                  value={formData.promoCode}
-                  onChange={(value) => setFormData(prev => ({ ...prev, promoCode: value }))}
-                  placeholder="Введите промокод (необязательно)"
-                />
+            {/* Right Column - Order Summary */}
+            <div className="lg:col-span-1">
+              <div className="sticky top-4">
+                {calculation.selectedServices.length > 0 && (
+                  <PriceSummary calculation={calculation} />
+                )}
               </div>
-            )}
-
-            {/* Payment Step - Mobile Only */}
-            {currentStep === 'payment' && (
-              <div className="mb-8 lg:hidden">
-                <h2 className="text-xl font-light text-gray-800 mb-4">Способ оплаты</h2>
-                <PaymentIntegration
-                  total={calculation.total}
-                  currency="EUR"
-                  onPayment={handlePayment}
-                  isProcessing={isProcessing}
-                />
-              </div>
-            )}
-
-            {/* Action Buttons */}
-            <div className="space-y-4">
-              {currentStep !== 'payment' && (
-                <button
-                  onClick={handleNextStep}
-                  disabled={calculation.selectedServices.length === 0}
-                  className="w-full py-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-light rounded-2xl 
-                    shadow-2xl shadow-blue-500/30 transition-all duration-300 active:scale-95 hover:-translate-y-0.5
-                    disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {currentStep === 'selection' ? 'Продолжить' : 'К оплате'}
-                </button>
-              )}
-
-              {/* Terms */}
-              {currentStep === 'contact' && (
-                <label className="flex items-start space-x-3 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={termsAccepted}
-                    onChange={(e) => setTermsAccepted(e.target.checked)}
-                    className="mt-1 w-5 h-5 rounded border-2 border-gray-300 text-blue-500 focus:ring-blue-500"
-                  />
-                  <span className="text-xs font-light text-gray-600 leading-relaxed">
-                    Я согласен с условиями предоставления услуг и политикой конфиденциальности
-                  </span>
-                </label>
-              )}
-
-              {/* Back Button */}
-              {currentStep !== 'selection' && (
-                <button
-                  onClick={() => setCurrentStep(prev => 
-                    prev === 'payment' ? 'contact' : 'selection'
-                  )}
-                  className="w-full py-3 text-gray-600 font-light rounded-2xl border border-gray-200 
-                    bg-white/80 backdrop-blur-xl hover:bg-gray-50 transition-all duration-300"
-                >
-                  Назад
-                </button>
-              )}
             </div>
           </div>
+        )}
 
-          {/* Right Column - Summary and Payment */}
-          <div className="lg:col-span-1">
-            <div className="sticky top-4 space-y-6">
-              {/* Price Summary - Always visible when services are selected */}
-              {calculation.selectedServices.length > 0 && (
-                <PriceSummary calculation={calculation} />
-              )}
-
-              {/* Payment Step - Desktop Only */}
-              {currentStep === 'payment' && (
-                <div className="hidden lg:block">
-                  <h2 className="text-xl font-light text-gray-800 mb-4">Способ оплаты</h2>
-                  <PaymentIntegration
-                    total={calculation.total}
-                    currency="EUR"
-                    onPayment={handlePayment}
-                    isProcessing={isProcessing}
-                  />
-                </div>
-              )}
+        {/* Contact Form Step - Single Column */}
+        {currentStep === 'contact' && (
+          <div className="max-w-2xl mx-auto">
+            <div className="space-y-4 mb-8">
+              <h2 className="text-xl font-light text-gray-800 mb-4">Контактная информация</h2>
+              
+              <FormField
+                label="Полное имя"
+                value={formData.name}
+                onChange={(value) => setFormData(prev => ({ ...prev, name: value }))}
+                error={formErrors.name}
+                required
+                placeholder="Введите ваше полное имя"
+              />
+              
+              <FormField
+                label="Email"
+                type="email"
+                value={formData.email}
+                onChange={(value) => setFormData(prev => ({ ...prev, email: value }))}
+                error={formErrors.email}
+                required
+                placeholder="example@email.com"
+              />
+              
+              <FormField
+                label="Телефон"
+                type="tel"
+                value={formData.phone}
+                onChange={(value) => setFormData(prev => ({ ...prev, phone: value }))}
+                error={formErrors.phone}
+                required
+                placeholder="+7 (999) 123-45-67"
+              />
+              
+              <FormField
+                label="Промокод"
+                value={formData.promoCode}
+                onChange={(value) => setFormData(prev => ({ ...prev, promoCode: value }))}
+                placeholder="Введите промокод (необязательно)"
+              />
             </div>
+
+            {/* Price Summary for contact step */}
+            {calculation.selectedServices.length > 0 && (
+              <PriceSummary calculation={calculation} />
+            )}
+          </div>
+        )}
+
+        {/* Payment Step - Two Column Layout */}
+        {currentStep === 'payment' && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Left Column - Payment Options */}
+            <div className="lg:col-span-2">
+              <h2 className="text-xl font-light text-gray-800 mb-4">Способ оплаты</h2>
+              <PaymentIntegration
+                total={calculation.total}
+                currency="EUR"
+                onPayment={handlePayment}
+                isProcessing={isProcessing}
+              />
+            </div>
+
+            {/* Right Column - Order Summary */}
+            <div className="lg:col-span-1">
+              <div className="sticky top-4">
+                {calculation.selectedServices.length > 0 && (
+                  <PriceSummary calculation={calculation} />
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Action Buttons - Centered for all steps */}
+        <div className="max-w-2xl mx-auto mt-8">
+          <div className="space-y-4">
+            {currentStep !== 'payment' && (
+              <button
+                onClick={handleNextStep}
+                disabled={calculation.selectedServices.length === 0}
+                className="w-full py-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-light rounded-2xl 
+                  shadow-2xl shadow-blue-500/30 transition-all duration-300 active:scale-95 hover:-translate-y-0.5
+                  disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {currentStep === 'selection' ? 'Продолжить' : 'К оплате'}
+              </button>
+            )}
+
+            {/* Terms */}
+            {currentStep === 'contact' && (
+              <label className="flex items-start space-x-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={termsAccepted}
+                  onChange={(e) => setTermsAccepted(e.target.checked)}
+                  className="mt-1 w-5 h-5 rounded border-2 border-gray-300 text-blue-500 focus:ring-blue-500"
+                />
+                <span className="text-xs font-light text-gray-600 leading-relaxed">
+                  Я согласен с условиями предоставления услуг и политикой конфиденциальности
+                </span>
+              </label>
+            )}
+
+            {/* Back Button */}
+            {currentStep !== 'selection' && (
+              <button
+                onClick={() => setCurrentStep(prev => 
+                  prev === 'payment' ? 'contact' : 'selection'
+                )}
+                className="w-full py-3 text-gray-600 font-light rounded-2xl border border-gray-200 
+                  bg-white/80 backdrop-blur-xl hover:bg-gray-50 transition-all duration-300"
+              >
+                Назад
+              </button>
+            )}
           </div>
         </div>
       </div>
