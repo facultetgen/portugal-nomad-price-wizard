@@ -202,7 +202,7 @@ const App = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/30 p-4">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-thin text-gray-800 mb-2">
@@ -232,9 +232,9 @@ const App = () => {
 
         {/* Services Selection Step - Two Column Layout */}
         {currentStep === 'selection' && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
             {/* Left Column - Services List */}
-            <div className="lg:col-span-2">
+            <div className="lg:col-span-3">
               <div className="space-y-3">
                 {services.map((service) => (
                   <ServiceCard 
@@ -247,7 +247,7 @@ const App = () => {
             </div>
 
             {/* Right Column - Order Summary */}
-            <div className="lg:col-span-1">
+            <div className="lg:col-span-2">
               <div className="sticky top-4">
                 {calculation.selectedServices.length > 0 && (
                   <PriceSummary calculation={calculation} />
@@ -259,9 +259,9 @@ const App = () => {
 
         {/* Contact Form Step - Two Column Layout */}
         {currentStep === 'contact' && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
             {/* Left Column - Contact Form */}
-            <div className="lg:col-span-2">
+            <div className="lg:col-span-3">
               <div className="space-y-4">
                 <h2 className="text-xl font-light text-gray-800 mb-4">Контактная информация</h2>
                 
@@ -304,7 +304,7 @@ const App = () => {
             </div>
 
             {/* Right Column - Order Summary */}
-            <div className="lg:col-span-1">
+            <div className="lg:col-span-2">
               <div className="sticky top-4">
                 {calculation.selectedServices.length > 0 && (
                   <PriceSummary calculation={calculation} />
@@ -316,9 +316,9 @@ const App = () => {
 
         {/* Payment Step - Two Column Layout */}
         {currentStep === 'payment' && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
             {/* Left Column - Payment Options */}
-            <div className="lg:col-span-2">
+            <div className="lg:col-span-3">
               <h2 className="text-xl font-light text-gray-800 mb-4">Способ оплаты</h2>
               <PaymentIntegration
                 total={calculation.total}
@@ -329,7 +329,7 @@ const App = () => {
             </div>
 
             {/* Right Column - Order Summary */}
-            <div className="lg:col-span-1">
+            <div className="lg:col-span-2">
               <div className="sticky top-4">
                 {calculation.selectedServices.length > 0 && (
                   <PriceSummary calculation={calculation} />
